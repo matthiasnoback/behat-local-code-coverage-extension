@@ -1,0 +1,8 @@
+services:
+    local_code_coverage.local_code_coverage_listener:
+        class: BehatLocalCodeCoverage\LocalCodeCoverageListener
+        arguments:
+            - '%local_code_coverage.phpunit_xml_path%'
+            - '%local_code_coverage.target_directory%'
+        tags:
+            - { name: event_dispatcher.subscriber }

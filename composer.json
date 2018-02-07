@@ -1,0 +1,13 @@
+{
+    "name": "matthiasnoback/behat-local-code-coverage-extension",
+    "require": {
+        "php": "^7.0",
+        "behat/behat": "^3.4",
+        "matthiasnoback/live-code-coverage": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
