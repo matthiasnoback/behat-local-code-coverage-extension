@@ -15,9 +15,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 final class LocalCodeCoverageListener implements EventSubscriberInterface
 {
     /**
-     * @var CodeCoverage
+     * @var string
      */
-    private $coverage;
+    private $phpunitXmlPath;
 
     /**
      * @var string
@@ -29,10 +29,15 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
      */
     private $coverageEnabled = false;
 
+    /**
+     * @var CodeCoverage
+     */
+    private $coverage;
+
     public function __construct($phpunitXmlPath, $targetDirectory)
     {
-        $this->coverage = CodeCoverageFactory::createFromPhpUnitConfiguration($phpunitXmlPath);
         $this->targetDirectory = $targetDirectory;
+        $this->phpunitXmlPath = $phpunitXmlPath;
     }
 
     public static function getSubscribedEvents()
@@ -49,6 +54,12 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
     {
         $this->coverageEnabled = $event->getSuite()->hasSetting('local_coverage_enabled')
             && (bool)$event->getSuite()->getSetting('local_coverage_enabled');
+
+        if (!$this->coverageEnabled) {
+            return;
+        }
+
+        $this->coverage = CodeCoverageFactory::createFromPhpUnitConfiguration($this->phpunitXmlPath);
     }
 
     public function beforeScenario(ScenarioLikeTested $event)
