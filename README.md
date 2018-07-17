@@ -2,6 +2,19 @@
 
 This extension can be used to collect code coverage data when using Behat.
 
+# Install
+
+    $ composer require --dev matthiasnoback/behat-local-code-coverage-extension
+
+You'll also need Xdebug installed and enabled in your PHP installation (or
+Docker image) and also code coverage.  Something like:
+
+    zend_extension=xdebug.so
+    xdebug.coverage_enable=1
+
+   
+# Use 
+
 To use this extension, enable it under `extensions` and for every suite that needs local code coverage collection, set `local_coverage_enabled` to `true`.
 
 ```yaml
