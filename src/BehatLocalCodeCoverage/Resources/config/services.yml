@@ -4,5 +4,6 @@ services:
         arguments:
             - '%local_code_coverage.phpunit_xml_path%'
             - '%local_code_coverage.target_directory%'
+            - '%local_code_coverage.split_by%'
         tags:
             - { name: event_dispatcher.subscriber }
