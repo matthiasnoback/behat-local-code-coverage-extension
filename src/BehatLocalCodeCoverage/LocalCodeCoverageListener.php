@@ -25,6 +25,11 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
     private $targetDirectory;
 
     /**
+     * @var string
+     */
+    private $splitBy = 'suite';
+
+    /**
      * @var bool
      */
     private $coverageEnabled = false;
@@ -34,10 +39,11 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
      */
     private $coverage;
 
-    public function __construct($phpunitXmlPath, $targetDirectory)
+    public function __construct($phpunitXmlPath, $targetDirectory, $splitBy)
     {
         $this->targetDirectory = $targetDirectory;
         $this->phpunitXmlPath = $phpunitXmlPath;
+        $this->splitBy = $splitBy;
     }
 
     public static function getSubscribedEvents()
@@ -46,6 +52,7 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
             SuiteTested::BEFORE => 'beforeSuite',
             ScenarioTested::BEFORE => 'beforeScenario',
             ScenarioTested::AFTER => 'afterScenario',
+            FeatureTested::AFTER => 'afterFeature',
             SuiteTested::AFTER => 'afterSuite'
         ];
     }
@@ -82,13 +89,25 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
         $this->coverage->stop();
     }
 
+    public function afterFeature(AfterFeatureTested $event)
+    {
+        if (!$this->coverageEnabled || 'feature' !== $this->splitBy) {
+            return;
+        }
+
+        $parts = pathinfo($event->getFeature()->getFile());
+        Storage::storeCodeCoverage($this->coverage, $this->targetDirectory, sprintf('%s-%s', basename($parts['dirname']), $parts['filename']));
+    }
+
     public function afterSuite(AfterSuiteTested $event)
     {
         if (!$this->coverageEnabled) {
             return;
         }
 
-        Storage::storeCodeCoverage($this->coverage, $this->targetDirectory, $event->getSuite()->getName());
+        if ('suite' === $this->splitBy) {
+            Storage::storeCodeCoverage($this->coverage, $this->targetDirectory, $event->getSuite()->getName());
+        }
 
         $this->reset();
     }

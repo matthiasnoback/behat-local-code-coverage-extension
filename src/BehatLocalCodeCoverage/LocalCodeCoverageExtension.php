@@ -37,6 +37,10 @@ final class LocalCodeCoverageExtension implements Extension
                     ->isRequired()
                     ->info('The directory where the generated coverage files should be stored.')
                 ->end()
+                ->scalarNode('split_by')
+                    ->defaultValue('suite')
+                    ->info('The strategy to save/split coverage files by (suite or feature).')
+                ->end()
             ->end();
     }
 
@@ -47,5 +51,6 @@ final class LocalCodeCoverageExtension implements Extension
 
         $container->setParameter('local_code_coverage.phpunit_xml_path', $config['phpunit_xml_path']);
         $container->setParameter('local_code_coverage.target_directory', $config['target_directory']);
+        $container->setParameter('local_code_coverage.split_by', $config['split_by']);
     }
 }
