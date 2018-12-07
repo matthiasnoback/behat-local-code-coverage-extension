@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace BehatLocalCodeCoverage;
 
+use Behat\Behat\EventDispatcher\Event\AfterFeatureTested;
+use Behat\Behat\EventDispatcher\Event\FeatureTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioLikeTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 use Behat\Testwork\EventDispatcher\Event\AfterSuiteTested;
