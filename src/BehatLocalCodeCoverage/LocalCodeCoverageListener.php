@@ -7,6 +7,7 @@ use Behat\Behat\EventDispatcher\Event\AfterFeatureTested;
 use Behat\Behat\EventDispatcher\Event\FeatureTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioLikeTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
+use Behat\Behat\EventDispatcher\Event\OutlineTested;
 use Behat\Testwork\EventDispatcher\Event\AfterSuiteTested;
 use Behat\Testwork\EventDispatcher\Event\SuiteTested;
 use LiveCodeCoverage\CodeCoverageFactory;
@@ -54,6 +55,9 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
             SuiteTested::BEFORE => 'beforeSuite',
             ScenarioTested::BEFORE => 'beforeScenario',
             ScenarioTested::AFTER => 'afterScenario',
+            ScenarioTested::AFTER => 'afterScenario',
+            OutlineTested::BEFORE => 'beforeScenarioOutline',
+            OutlineTested::AFTER => 'beforeScenarioOutline',
             FeatureTested::AFTER => 'afterFeature',
             SuiteTested::AFTER => 'afterSuite'
         ];
@@ -83,6 +87,26 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
     }
 
     public function afterScenario(ScenarioLikeTested $event)
+    {
+        if (!$this->coverageEnabled) {
+            return;
+        }
+
+        $this->coverage->stop();
+    }
+
+    public function beforeScenarioOutline(OutlineTested $event)
+    {
+        if (!$this->coverageEnabled) {
+            return;
+        }
+
+        $coverageId = $event->getFeature()->getFile() . ':' . $event->getOutline()->getLine();
+
+        $this->coverage->start($coverageId);
+    }
+
+    public function afterScenarioOutline(OutlineTested $event)
     {
         if (!$this->coverageEnabled) {
             return;
