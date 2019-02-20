@@ -55,7 +55,6 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
             SuiteTested::BEFORE => 'beforeSuite',
             ScenarioTested::BEFORE => 'beforeScenario',
             ScenarioTested::AFTER => 'afterScenario',
-            ScenarioTested::AFTER => 'afterScenario',
             OutlineTested::BEFORE => 'beforeScenarioOutline',
             OutlineTested::AFTER => 'beforeScenarioOutline',
             FeatureTested::AFTER => 'afterFeature',
