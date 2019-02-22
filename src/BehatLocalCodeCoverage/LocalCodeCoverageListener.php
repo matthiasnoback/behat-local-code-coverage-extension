@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BehatLocalCodeCoverage;
 
 use Behat\Behat\EventDispatcher\Event\AfterFeatureTested;
+use Behat\Behat\EventDispatcher\Event\ExampleTested;
 use Behat\Behat\EventDispatcher\Event\FeatureTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioLikeTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
@@ -54,6 +55,8 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
             SuiteTested::BEFORE => 'beforeSuite',
             ScenarioTested::BEFORE => 'beforeScenario',
             ScenarioTested::AFTER => 'afterScenario',
+            ExampleTested::BEFORE => 'beforeScenario',
+            ExampleTested::AFTER => 'afterScenario',
             FeatureTested::AFTER => 'afterFeature',
             SuiteTested::AFTER => 'afterSuite'
         ];
