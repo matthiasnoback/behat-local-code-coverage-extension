@@ -71,12 +71,16 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
             return;
         }
 
-        $this->coverage = CodeCoverageFactory::createFromPhpUnitConfiguration($this->phpunitXmlPath);
+        try {
+            $this->coverage = CodeCoverageFactory::createFromPhpUnitConfiguration($this->phpunitXmlPath);
+        } catch (\RuntimeException $ex) {
+            echo PHP_EOL . $ex->getMessage() . PHP_EOL;
+        }
     }
 
     public function beforeScenario(ScenarioLikeTested $event)
     {
-        if (!$this->coverageEnabled) {
+        if (!$this->coverageEnabled || $this->coverage === null) {
             return;
         }
 
@@ -87,7 +91,7 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
 
     public function afterScenario(ScenarioLikeTested $event)
     {
-        if (!$this->coverageEnabled) {
+        if (!$this->coverageEnabled || $this->coverage === null) {
             return;
         }
 
@@ -96,7 +100,7 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
 
     public function afterFeature(AfterFeatureTested $event)
     {
-        if (!$this->coverageEnabled || 'feature' !== $this->splitBy) {
+        if (!$this->coverageEnabled || $this->coverage === null || 'feature' !== $this->splitBy) {
             return;
         }
 
@@ -106,7 +110,7 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
 
     public function afterSuite(AfterSuiteTested $event)
     {
-        if (!$this->coverageEnabled) {
+        if (!$this->coverageEnabled || $this->coverage === null) {
             return;
         }
 
