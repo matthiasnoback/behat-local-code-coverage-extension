@@ -108,8 +108,13 @@ final class LocalCodeCoverageListener implements EventSubscriberInterface
         Storage::storeCodeCoverage($this->coverage, $this->targetDirectory, sprintf('%s-%s', basename($parts['dirname']), $parts['filename']));
     }
 
-    public function afterSuite(AfterSuiteTested $event)
+    public function afterSuite(SuiteTested $event)
     {
+        // there could also be an AfterSuiteAborted event
+        if (! $event instanceof AfterSuiteTested) {
+            return;
+        }
+
         if (!$this->coverageEnabled || $this->coverage === null) {
             return;
         }
