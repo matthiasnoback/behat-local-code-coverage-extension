@@ -1,5 +1,6 @@
 {
     "name": "matthiasnoback/behat-local-code-coverage-extension",
+    "license": "MIT",
     "require": {
         "php": ">=7.0",
         "behat/behat": "^3.4",
